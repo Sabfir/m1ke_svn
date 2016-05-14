@@ -5,7 +5,7 @@ import ua.mike.opinta.exceptions.MikeException;
 public class ActionCommit extends UserAction {
 
 	public ActionCommit(Repository repository) {
-		super.setRepository(repository);
+		super(repository);
 	}
 
 	public boolean isValidCommandForThisAction(String command) {

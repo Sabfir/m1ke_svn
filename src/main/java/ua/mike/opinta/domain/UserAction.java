@@ -13,7 +13,8 @@ public abstract class UserAction {
 
     public UserAction() {
     }
-
+    public UserAction(Repository repository) {
+    }
     public abstract void processCommand(String command) throws MikeException;
 
     public abstract String showHint();
@@ -24,10 +25,15 @@ public abstract class UserAction {
 
     public abstract boolean isValidCommandForThisAction(String command);
 
-    protected boolean isValidCommandByPattern(String command, String patternString, Integer[] checkPatternGroup) {
-        List<Integer> listResult = new ArrayList<Integer>();
+    protected Matcher resolvePattern(String command, String patternString){
         Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(command);
+        return matcher;
+    }
+
+    protected boolean isValidCommandByPattern(String command, String patternString, Integer[] checkPatternGroup) {
+        List<Integer> listResult = new ArrayList<Integer>();
+        Matcher matcher = resolvePattern(command, patternString);
         if (matcher.find()) {
             for (int captureCounter = 1; captureCounter <= matcher.groupCount(); captureCounter++) {
                 if (matcher.group(captureCounter) != null && Arrays.asList(checkPatternGroup).contains(captureCounter)) {

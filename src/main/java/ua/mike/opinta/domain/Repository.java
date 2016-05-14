@@ -1,9 +1,9 @@
 package ua.mike.opinta.domain;
 
-import java.lang.reflect.Field;
-
 import ua.mike.opinta.exceptions.MikeException;
 import ua.mike.opinta.helpers.FileHelper;
+
+import java.io.IOException;
 
 public class Repository {
 	private String path;
@@ -48,7 +48,22 @@ public class Repository {
 		// TODO read first not empty line from file RELETIVE_PATH_HEAD. E.g. "ref: refs/dev" means that the branch name is "dev"
 		return "";
 	}
-	
+
+	public boolean isBranchExist(String branch){
+		return FileHelper.isExist(getPath() + RELETIVE_PATH_REFS + branch);
+	}
+
+	public boolean createBranch(String branch) {
+		boolean status;
+		try {
+			FileHelper.createDirectory(getPath() + RELETIVE_PATH_REFS + branch);
+			status = true;
+		} catch (IOException e) {
+			status = false;
+		}
+		return status;
+	}
+
 	public String getPath() {
 		return path;
 	}

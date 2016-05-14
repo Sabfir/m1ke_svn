@@ -9,30 +9,26 @@ public class UserActionTest {
 	private UserAction userAction;
 	private ActionCreateBranch actionCreateBranch;
 
-	@Before
-	public void setUp() {
+	@Before public void setUp() {
 		actionCreateBranch = new ActionCreateBranch(new Repository(""));
 		userAction = Mockito.spy(UserAction.class);
 		// TODO before each test
 	}
 
-	@Test
-	public void isValidCommandByPatternTest(){
-		Assert.assertEquals("Can\'t validate action create-branch", true,
+	@Test public void testIsValidCommandByPattern(){
+		Assert.assertEquals("Can\'t validate action create-branch by pattern", true,
 				userAction.isValidCommandByPattern("m1ke create-branch -someBranchName",
 				actionCreateBranch.getPatternRule(), actionCreateBranch.getPatternVerifyPoint()));
 	}
 
-	@Test
-	public void isValidCommandByPatternFalseTest(){
-		Assert.assertEquals("Don\'t verify correct command create--branch", false,
+	@Test public void testIsValidCommandByPatternFalse(){
+		Assert.assertEquals("Don\'t verify correct command create--branch by pattern", false,
 				userAction.isValidCommandByPattern("m1ke create--branch -someBranchName",
 						actionCreateBranch.getPatternRule(), actionCreateBranch.getPatternVerifyPoint()));
 	}
 
-	@Test
-	public void isValidCommandByPatternWithoutParameterTest(){
-		Assert.assertEquals("Don\'t verify correct command create-branch without parameter", false,
+	@Test public void testIsValidCommandByPatternWithoutParameter(){
+		Assert.assertEquals("Don\'t verify correct command create-branch without parameter by pattern", false,
 				userAction.isValidCommandByPattern("m1ke create-branch",
 						actionCreateBranch.getPatternRule(), actionCreateBranch.getPatternVerifyPoint()));
 	}

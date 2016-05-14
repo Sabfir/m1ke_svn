@@ -17,9 +17,8 @@ public class FileHelper {
 	
 	public static void createFileByUrl(String url) throws MikeException {
 		boolean isFolder = "\\".equals(url.substring(url.length() - 1));
-		
 		Path path = Paths.get(url.trim());
-        
+
 		if (!Files.exists(path)) {
             try {
                 if (isFolder) {
@@ -36,4 +35,15 @@ public class FileHelper {
         	System.out.println("File " + url + " already exists.");
         }
 	}
+
+	public static boolean isExist(String url){
+		Path path = Paths.get(url.trim());
+		return Files.exists(path);
+	}
+
+	public static void createDirectory(String url) throws IOException {
+		Path path = Paths.get(url.trim());
+		Files.createDirectory(path);
+	}
+
 }
