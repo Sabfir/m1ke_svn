@@ -34,7 +34,6 @@
 			<artifactId>reflections-maven</artifactId>
 			<version>0.9.9-RC2</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -44,6 +43,11 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.10.19</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
 		</dependency>
 	</dependencies>
 </project>

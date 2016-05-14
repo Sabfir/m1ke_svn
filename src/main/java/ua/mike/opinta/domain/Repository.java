@@ -3,7 +3,12 @@ package ua.mike.opinta.domain;
 import ua.mike.opinta.exceptions.MikeException;
 import ua.mike.opinta.helpers.FileHelper;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Repository {
 	private String path;
@@ -32,7 +37,7 @@ public class Repository {
 //		Field[] fields = clazz.getDeclaredFields(); 
 //		
 //		for (Field field : fields) { 
-//		    String fieldName = field.getName();
+//		    String fieldName = field.getvalueName();
 //		    if (fieldName.toUpperCase().contains("RELETIVE_PATH_")) {
 //		    	// TODO create file or folder. Folder ends with \\
 //		    	try {
@@ -70,5 +75,47 @@ public class Repository {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public List<String> getChangedFiles() {
+		List<String> fileList;
+		try {
+			fileList = FileHelper.getFileList(getPath());
+		} catch (MikeException e) {
+			fileList = new ArrayList<String>();
+		}
+		for (String fileUrl : fileList) {
+			try {
+				String fileHash = getFileHash(fileUrl);
+				if (!FileHelper.filesAreEqual(new File(fileUrl), new File(getPath() + RELETIVE_PATH_REFS + "!!!!!!!" + fileHash))) {
+					fileList.add(fileUrl);
+				}
+			} catch (MikeException e) {
+				//exclude file....
+			}
+		}
+		return fileList;
+	}
+
+	private String getFileHash(String pathUrl) throws MikeException {
+		String fileHash;
+		try {
+			Map<String, String> propertiesFromFile = FileHelper.getPropertiesFromFile(getPath() + RELETIVE_PATH_INDEX);
+			fileHash = propertiesFromFile.get(pathUrl);
+			if (fileHash == null) {
+				fileHash = FileHelper.getFileHash(pathUrl);
+			}
+		} catch (IOException e) {
+			throw new MikeException("Can't compute hash for " + pathUrl, e);
+		}
+		return fileHash;
+	}
+
+	public Map<String, String> getMapFilesHash(List<String> changedFiles) {
+		return null;
+	}
+
+	public void addFileCommit(String key, String value) {
+
 	}
 }
