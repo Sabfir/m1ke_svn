@@ -1,22 +1,19 @@
 package ua.mike.opinta.domain;
-
-import java.util.List;
-
 import ua.mike.opinta.exceptions.MikeException;
-import ua.mike.opinta.helpers.StringHelper;
 
 public class ActionCreateBranch extends UserAction {
+	private final String VALIDATION_ROLE = "(m1ke)(\\s+)(create-branch)(\\s+)(-(?:[a-z][a-z]+))";
+	private final Integer[] CHECK_PATTERN_GROUP = new Integer[]{3,5};
+	private final String HINT = "m1ke create-branch <someBranchName>";
 
 	public ActionCreateBranch(Repository repository) {
-		super(repository);
+		super.setRepository(repository);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean isValidCommandForThisAction(String command) {
-		List<String> commandWords = StringHelper.getListOfStringBySplitter(command, " ");
-
-		return commandWords.size() == 3 && "CREATE-BRANCH".equals(commandWords.get(1).toUpperCase());
+		return super.isValidCommandByPattern(command, getPatternRule(), getPatternVerifyPoint());
 	}
 
 	@Override
@@ -27,7 +24,16 @@ public class ActionCreateBranch extends UserAction {
 
 	@Override
 	public String showHint() {
-		return "m1ke create-branch someBranchName";
+		return HINT;
 	}
 
+	@Override
+	public String getPatternRule() {
+		return VALIDATION_ROLE;
+	}
+
+	@Override
+	public Integer[] getPatternVerifyPoint() {
+		return CHECK_PATTERN_GROUP;
+	}
 }
