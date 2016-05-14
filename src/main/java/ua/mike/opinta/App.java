@@ -1,7 +1,13 @@
 package ua.mike.opinta;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import org.reflections.Reflections;
 
 import ua.mike.opinta.domain.ActionCommit;
 import ua.mike.opinta.domain.ActionContainer;
@@ -15,19 +21,20 @@ public class App
 	public static void main( String[] args )
 	{
 		try {
-			// mike init
-			// how to find current dir like git?
-			// try this:
-			// String currentLocation = System.getProperty("user.dir");
-			// or
-			// File cwd = new File(".");
+			System.out.println("System.getProperty(user.dir):" + System.getProperty("user.dir"));
 			
 			String currentLocation = System.getProperty("user.dir");
 			Repository repository = new Repository(currentLocation);
 			
 			List<UserAction> actions = new ArrayList<UserAction>();
-			// TODO add all actions (classes that extend UserAction abstract class) through reflection
-			actions.add(new ActionCommit(repository));
+			
+			Reflections reflections = new Reflections(UserAction.class);
+			Set<Class<? extends UserAction>> actionClasses = reflections.getSubTypesOf(UserAction.class);
+			
+			for (Class<? extends UserAction> actionClass : actionClasses) {
+				Constructor<?> constructor = actionClass.getConstructor(UserAction.class);
+				actions.add((UserAction) constructor.newInstance(new Object[] {repository}));
+			}
 			
 			ActionContainer actionContainer = new ActionContainer(actions);
 			
@@ -36,6 +43,9 @@ public class App
     		workFlow.runMikeRun(repository);
 		} catch (MikeException e) {
 			System.out.println("An error occurred while working with the mike svv!" + e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO
 			e.printStackTrace();
 		}
 	}
