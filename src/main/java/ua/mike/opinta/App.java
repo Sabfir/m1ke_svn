@@ -1,15 +1,12 @@
 package ua.mike.opinta;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.reflections.Reflections;
 
-import ua.mike.opinta.domain.ActionCommit;
 import ua.mike.opinta.domain.ActionContainer;
 import ua.mike.opinta.domain.Repository;
 import ua.mike.opinta.domain.UserAction;
@@ -32,8 +29,8 @@ public class App
 			Set<Class<? extends UserAction>> actionClasses = reflections.getSubTypesOf(UserAction.class);
 			
 			for (Class<? extends UserAction> actionClass : actionClasses) {
-				Constructor<?> constructor = actionClass.getConstructor(UserAction.class);
-				actions.add((UserAction) constructor.newInstance(new Object[] {repository}));
+				Constructor<?> constructor = actionClass.getDeclaredConstructor(Repository.class);
+				actions.add((UserAction) constructor.newInstance(repository));
 			}
 			
 			ActionContainer actionContainer = new ActionContainer(actions);
@@ -42,7 +39,7 @@ public class App
 			
     		workFlow.runMikeRun(repository);
 		} catch (MikeException e) {
-			System.out.println("An error occurred while working with the mike svv!" + e.getMessage());
+			System.out.println("An error occurred while working with the mike cvs!" + e.getMessage());
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO
