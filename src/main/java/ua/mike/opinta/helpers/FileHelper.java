@@ -31,7 +31,7 @@ public class FileHelper {
 			throw new MikeException("Can\'t make comparison for file " + fileCurrentVersion.getName(), e);
 		}
 	}
-	
+
 	public static Path createFileByUrl(String url) throws MikeException {
 		boolean isFolder = "\\".equals(url.substring(url.length() - 1));
 		Path path = Paths.get(url.trim());
@@ -64,13 +64,27 @@ public class FileHelper {
 		Files.createDirectory(path);
 	}
 
-	public static List<String> getFileList(String url) throws MikeException {
+	public static List<String> getFileList(String url, String filterPattern) throws MikeException {
 		Path path = Paths.get(url.trim());
 		List<String> fileList = new ArrayList<>();
 
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)){
+		DirectoryStream.Filter filter = new DirectoryStream.Filter() {
+			@Override
+			public boolean accept(Object entry) throws IOException {
+				boolean isMatch = true;
+				if (!filterPattern.isEmpty()) {
+					isMatch = !((Path)entry).toAbsolutePath().toString().endsWith(filterPattern);
+				}
+				return isMatch;
+			}
+		};
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, filter)){
 			for (Path pathToFile : stream) {
-				fileList.add(pathToFile.toString());
+				if (pathToFile.toFile().isDirectory()) {
+					fileList.addAll(getFileList(pathToFile.toAbsolutePath().toString(), filterPattern));
+				} else {
+					fileList.add(pathToFile.toString());
+				}
 			}
 		} catch (IOException e) {
 			throw new MikeException("Can\'t get list of files", e);
