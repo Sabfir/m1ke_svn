@@ -40,7 +40,7 @@ public class WorkFlow {
 	private void validateStateBeforeCommands(Repository repository) throws MikeException {
 		if (!repository.isInitialized()) {
 			repository.initialize();
-			actionContainer.processUserCommand("m1ke commit -m initial commit");
+			//actionContainer.processUserCommand("m1ke commit -m initial commit");
 		}
 	}
 }

@@ -32,23 +32,23 @@ public class ActionCommit extends UserAction {
 			}
 		});
 		String transactionId = getRepository().getTransactionId();
-		final boolean[] rollBackTransaction = {false};
-		if (getRepository().startTransaction(transactionId)) {
-				mapFileHash.forEach((key, value) -> {
+//		final boolean[] rollBackTransaction = {false};
+//		if (getRepository().startTransaction(transactionId)) {
+			mapFileHash.forEach((key, value) -> {
 				try {
 					getRepository().addFileCommit(transactionId, key, value);
 				} catch (MikeException e) {
-					rollBackTransaction[0] = true;
+//					rollBackTransaction[0] = true;
 				}
 			});
-		} else {
-			throw new MikeException("Can\'t create file system transaction - root folder is locked");
-		}
-		if (rollBackTransaction[0] == true) {
-			getRepository().rollBackTransaction(transactionId);
-		} else {
-			getRepository().commitTransaction(transactionId);
-		}
+//		} else {
+//			throw new MikeException("Can\'t create file system transaction - root folder is locked");
+//		}
+//		if (rollBackTransaction[0] == true) {
+//			getRepository().rollBackTransaction(transactionId);
+//		} else {
+//			getRepository().commitTransaction(transactionId);
+//		}
 	}
 
 	public String showHint() {

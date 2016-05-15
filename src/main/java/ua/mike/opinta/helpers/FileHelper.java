@@ -61,6 +61,7 @@ public class FileHelper {
 
 	public static void createDirectory(String url) throws IOException {
 		Path path = Paths.get(url.trim());
+		System.out.println("url: " + url.trim());
 		Files.createDirectory(path);
 	}
 
@@ -131,13 +132,13 @@ public class FileHelper {
 		Files.deleteIfExists(path);
 	}
 
-
-//	public static boolean copyFile(String source, String destination) {
-//		try {
-//			Files.copy(Paths.get(source), Paths.get(destination));
-//			return true;
-//		} catch (IOException e) {
-//			return false;
-//		}
-//	}
+	public static boolean copyFile(String source, String destination) {
+		try {
+			Files.copy(Paths.get(source), Paths.get(destination));
+			return true;
+		} catch (IOException e) {
+			System.out.println("1111" + e.getMessage());
+			return false;
+		}
+	}
 }

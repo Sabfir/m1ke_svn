@@ -14,6 +14,7 @@ public abstract class UserAction {
     public UserAction() {
     }
     public UserAction(Repository repository) {
+    	this.repository = repository;
     }
     public abstract void processCommand(String command) throws MikeException;
 

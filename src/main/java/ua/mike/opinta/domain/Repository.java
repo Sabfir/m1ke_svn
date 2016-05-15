@@ -122,10 +122,14 @@ public class Repository {
 		for (String fileUrl : fileList) {
 			try {
 				String fileHash = getFileHash(fileUrl);
-				if (!FileHelper.compareFiles(new File(fileUrl), new File(getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "\\" + fileHash))) {
+				
+				String url = getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "/" + fileHash;
+				System.out.println("path!: " + url);
+				if (!FileHelper.compareFiles(new File(fileUrl), new File(url))) {
 					fileList.add(fileUrl);
 				}
 			} catch (MikeException e) {
+				System.out.println("11111: " + e.getMessage());
 				//exclude file....
 			}
 		}
@@ -136,7 +140,9 @@ public class Repository {
 		String fileHash;
 		try {
 			if (indexFile.isEmpty()) {
-				indexFile = FileHelper.getPropertiesFromFile(getPath() + RELETIVE_PATH_INDEX);
+				String url = getPath() + RELETIVE_PATH_INDEX;
+				System.out.println("111: " + url);
+				indexFile = FileHelper.getPropertiesFromFile(url);
 			}
 			fileHash = indexFile.get(pathUrl);
 			if (fileHash == null) {
@@ -149,12 +155,13 @@ public class Repository {
 	}
 
 	public void addFileCommit(String transactionId, String pathToFile, String hash) throws MikeException {
-		boolean overwrite = true;
-		try {
-			frm.copyResource(transactionId, pathToFile, getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "\\" + hash + "-" + String.valueOf(new GregorianCalendar().getTimeInMillis()), overwrite);
-		} catch (ResourceManagerException e) {
-			throw new MikeException("Transaction error of copy operation for file " + pathToFile, e);
-		}
+//		boolean overwrite = true;
+		FileHelper.copyFile(pathToFile, getPath() + RELETIVE_PATH_REFS + "/" + getCurentBranchName() + "/" + hash + "-" + String.valueOf(new GregorianCalendar().getTimeInMillis()));
+//		try {
+//			frm.copyResource(transactionId, pathToFile, getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "\\" + hash + "-" + String.valueOf(new GregorianCalendar().getTimeInMillis()), overwrite);
+//		} catch (ResourceManagerException e) {
+//			throw new MikeException("Transaction error of copy operation for file " + pathToFile, e);
+//		}
 	}
 
 	public String getTransactionId() {
