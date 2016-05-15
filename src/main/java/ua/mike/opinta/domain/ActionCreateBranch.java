@@ -11,7 +11,6 @@ public class ActionCreateBranch extends UserAction {
 
 	public ActionCreateBranch(Repository repository) {
 		super(repository);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
