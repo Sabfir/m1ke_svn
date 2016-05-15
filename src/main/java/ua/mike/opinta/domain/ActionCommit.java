@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActionCommit extends UserAction {
-	private final String VALIDATION_ROLE = "(m1ke)(\\s+)(commit)(\\s+)(-m)((?:[a-z][a-z]+))";
-	private final Integer ARGUMENT_POSITION = 6;
+	private final String VALIDATION_ROLE = "(m1ke)(\\s+)(commit)(\\s+)(-m)(\\s+)((?:[a-z][a-z]+))";
+	private final Integer ARGUMENT_POSITION = 7;
 	private final Integer[] CHECK_PATTERN_GROUP = new Integer[]{1,3,5,ARGUMENT_POSITION};
-	private final String HINT = "m1ke commit <-comment> - commit to mike repository (to the last committed branch)";
+	private final String HINT = "m1ke commit -m <comment> - commit to mike repository (to the last committed branch)";
 
 	public ActionCommit(Repository repository) {
 		super(repository);
@@ -18,20 +18,25 @@ public class ActionCommit extends UserAction {
 		return super.isValidCommandByPattern(command, getPatternRule(), getPatternVerifyPoint());
 	}
 
+	@Override
+	public Repository getRepository() {
+		return super.getRepository();
+	}
+
 	public void processCommand(String command) throws MikeException {
 		Map<String, String> mapFileHash = new HashMap<>();
-		repository.getChangedFiles().forEach((pathFile) -> {
+		getRepository().getChangedFiles().forEach((pathFile) -> {
 			try {
-				mapFileHash.put(pathFile, repository.getFileHash(pathFile));
+				mapFileHash.put(pathFile, getRepository().getFileHash(pathFile));
 			} catch (MikeException e) {
 			}
 		});
-		String transactionId = repository.getTransactionId();
+		String transactionId = getRepository().getTransactionId();
 		final boolean[] rollBackTransaction = {false};
-		if (repository.startTransaction(transactionId)) {
+		if (getRepository().startTransaction(transactionId)) {
 				mapFileHash.forEach((key, value) -> {
 				try {
-					repository.addFileCommit(transactionId, key, value);
+					getRepository().addFileCommit(transactionId, key, value);
 				} catch (MikeException e) {
 					rollBackTransaction[0] = true;
 				}
@@ -40,9 +45,9 @@ public class ActionCommit extends UserAction {
 			throw new MikeException("Can\'t create file system transaction - root folder is locked");
 		}
 		if (rollBackTransaction[0] == true) {
-			repository.rollBackTransaction(transactionId);
+			getRepository().rollBackTransaction(transactionId);
 		} else {
-			repository.commitTransaction(transactionId);
+			getRepository().commitTransaction(transactionId);
 		}
 	}
 

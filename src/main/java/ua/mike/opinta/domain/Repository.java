@@ -15,13 +15,13 @@ import java.util.*;
 public class Repository {
 	private String path;
 	public final String RELETIVE_PATH_NAME = ".mike";
-	public final String RELETIVE_PATH_HEAD = ".mike\\HEAD";
-	public final String RELETIVE_PATH_REFS = ".mike\\refs\\";
-	public final String RELETIVE_PATH_INDEX = ".mike\\index";
-	public final String RELETIVE_PATH_TEMP = ".mike\\temp\\";
+	public final String RELETIVE_PATH_HEAD = ".mike/HEAD";
+	public final String RELETIVE_PATH_REFS = ".mike/refs";
+	public final String RELETIVE_PATH_INDEX = ".mike/index";
+	public final String RELETIVE_PATH_TEMP = ".mike/temp";
 	private final String HEAD_CONTENT_KEY = "ref";
 	private final String HEAD_CONTENT_VALUE = "master";
-	private final String INITIALIZATION_INFO = "m1ke found there was no branch here \'master\' branch was chosen";
+	private final String INITIALIZATION_INFO = "m1ke didn\'t find any branch here and set \'master\' branch as initial";
 	private static Map<String, String> indexFile = new HashMap<>();
 	FileResourceManager frm;
 
@@ -36,10 +36,15 @@ public class Repository {
 	}
 
 	public void initialize() throws MikeException {
-		FileHelper.createFileByUrl(RELETIVE_PATH_NAME);
-		FileHelper.createFileByUrl(RELETIVE_PATH_REFS);
+		try {
+			FileHelper.createDirectory(RELETIVE_PATH_NAME);
+			FileHelper.createDirectory(RELETIVE_PATH_REFS);
+			FileHelper.createDirectory(RELETIVE_PATH_REFS+"/"+HEAD_CONTENT_VALUE);
+		} catch (IOException e) {
+			throw new MikeException("Can\'t initialize repository", e);
+		}
 		FileHelper.createFileByUrl(RELETIVE_PATH_INDEX);
-		String pathHeadFile = FileHelper.createFileByUrl(getPath() + RELETIVE_PATH_HEAD).toString();
+		String pathHeadFile = FileHelper.createFileByUrl(RELETIVE_PATH_HEAD).toAbsolutePath().toString();
 		Map<String, String> headFileContent = new HashMap<>();
 		headFileContent.put(HEAD_CONTENT_KEY, HEAD_CONTENT_VALUE);
 		FileHelper.addPropertiesToFile(pathHeadFile, headFileContent, false);
@@ -110,7 +115,7 @@ public class Repository {
 	public List<String> getChangedFiles() {
 		List<String> fileList;
 		try {
-			fileList = FileHelper.getFileList(getPath());
+			fileList = FileHelper.getFileList(getPath(), RELETIVE_PATH_NAME);
 		} catch (MikeException e) {
 			fileList = new ArrayList<String>();
 		}

@@ -4,7 +4,7 @@ import ua.mike.opinta.exceptions.MikeException;
 import java.util.regex.Matcher;
 
 public class ActionCreateBranch extends UserAction {
-	private final String VALIDATION_ROLE = "(m1ke)(\\s+)(create-branch)(\\s+)(-(?:[a-z][a-z]+))";
+	private final String VALIDATION_ROLE = "(m1ke)(\\s+)(create-branch)(\\s+)((?:[a-z][a-z]+))";
 	private final Integer ARGUMENT_POSITION = 5;
 	private final Integer[] CHECK_PATTERN_GROUP = new Integer[]{1,3,ARGUMENT_POSITION};
 	private final String HINT = "m1ke create-branch <someBranchName>";
@@ -19,14 +19,19 @@ public class ActionCreateBranch extends UserAction {
 	}
 
 	@Override
+	public Repository getRepository() {
+		return super.getRepository();
+	}
+
+	@Override
 	public void processCommand(String command) throws MikeException {
 		Matcher matcher = super.resolvePattern(command, getPatternRule());
 		matcher.find();
 		String branch = matcher.group(ARGUMENT_POSITION);
-		if (repository.isBranchExist(branch)) {
+		if (getRepository().isBranchExist(branch)) {
 			throw new MikeException("Branch " + branch + " is already exist!");
 		}
-		if (repository.createBranch(branch)) {
+		if (getRepository().createBranch(branch)) {
 			throw new MikeException("Branch " + branch + " doesn\'t create");
 		}
 	}

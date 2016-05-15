@@ -17,7 +17,7 @@ public class WorkFlow {
 		try {
 			validateStateBeforeCommands(repository);
 		} catch (Exception e) {
-			throw new MikeException("Can't initialize mike!", e);
+			throw new MikeException("Can't initialize m1ke!", e);
 		}
 		
 		Scanner scannerIn = new Scanner(System.in);
@@ -40,6 +40,7 @@ public class WorkFlow {
 	private void validateStateBeforeCommands(Repository repository) throws MikeException {
 		if (!repository.isInitialized()) {
 			repository.initialize();
+			actionContainer.processUserCommand("m1ke commit -m initial commit");
 		}
 	}
 }

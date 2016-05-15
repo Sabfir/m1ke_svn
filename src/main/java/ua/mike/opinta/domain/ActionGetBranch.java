@@ -19,17 +19,22 @@ public class ActionGetBranch extends UserAction {
 	}
 
 	@Override
+	public Repository getRepository() {
+		return super.getRepository();
+	}
+
+	@Override
 	public void processCommand(String command) throws MikeException {
 		Matcher matcher = super.resolvePattern(command, getPatternRule());
 		matcher.find();
 		String branch = matcher.group(ARGUMENT_POSITION);
-		if (!repository.isBranchExist(branch)) {
+		if (!getRepository().isBranchExist(branch)) {
 			throw new MikeException("Branch " + branch + " doesn't  exist!");
 		} else {
-			if (repository.getChangedFiles().size() != 0) {
-				throw new MikeException("Current branch " + repository.getCurentBranchName() + " has uncommitted changes.");
+			if (getRepository().getChangedFiles().size() != 0) {
+				throw new MikeException("Current branch " + getRepository().getCurentBranchName() + " has uncommitted changes.");
 			} else {
-				if(!repository.setCurentBranchName(branch)) {
+				if(!getRepository().setCurentBranchName(branch)) {
 					throw new MikeException("Can\'t switch to " + branch + " branch - inner fault");
 				}
 			}

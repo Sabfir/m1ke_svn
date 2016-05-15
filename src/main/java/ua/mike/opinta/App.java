@@ -18,8 +18,6 @@ public class App
 	public static void main( String[] args )
 	{
 		try {
-			System.out.println("System.getProperty(user.dir):" + System.getProperty("user.dir"));
-			
 			String currentLocation = System.getProperty("user.dir");
 			Repository repository = new Repository(currentLocation);
 			

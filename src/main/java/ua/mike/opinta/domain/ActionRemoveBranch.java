@@ -19,17 +19,22 @@ public class ActionRemoveBranch extends UserAction {
 	}
 
 	@Override
+	public Repository getRepository() {
+		return super.getRepository();
+	}
+
+	@Override
 	public void processCommand(String command) throws MikeException {
 		Matcher matcher = super.resolvePattern(command, getPatternRule());
 		matcher.find();
 		String branch = matcher.group(ARGUMENT_POSITION);
-		if (!repository.isBranchExist(branch)) {
+		if (!getRepository().isBranchExist(branch)) {
 			throw new MikeException("Branch " + branch + " doesn't  exist!");
 		} else {
-			if (repository.getCurentBranchName().equalsIgnoreCase(branch)) {
+			if (getRepository().getCurentBranchName().equalsIgnoreCase(branch)) {
 				throw new MikeException("Attempt to remove current branch! Firstly switch current branch to another one.");
 			} else {
-				if (!repository.removeBranch(branch)) {
+				if (!getRepository().removeBranch(branch)) {
 					throw new MikeException("Can\'t remove branch " + branch + " inner fault");
 				}
 			}

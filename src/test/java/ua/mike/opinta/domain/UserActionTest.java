@@ -10,7 +10,7 @@ public class UserActionTest {
 	private ActionCreateBranch actionCreateBranch;
 
 	@Before public void setUp() {
-		actionCreateBranch = new ActionCreateBranch(new Repository(""));
+		actionCreateBranch = new ActionCreateBranch(new Repository());
 		userAction = Mockito.spy(UserAction.class);
 		// TODO before each test
 	}
