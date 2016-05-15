@@ -12,7 +12,7 @@ import ua.mike.opinta.exceptions.MikeException;
 
 public class FileHelper {
 
-	public static boolean filesAreEqual(File fileOldVersion, File fileCurrentVersion) throws MikeException {
+	public static boolean compareFiles(File fileOldVersion, File fileCurrentVersion) throws MikeException {
 		try (FileInputStream fisOldVersion = new FileInputStream(fileOldVersion);
 			 FileInputStream fisCurrentVersion = new FileInputStream(fileCurrentVersion)) {
 

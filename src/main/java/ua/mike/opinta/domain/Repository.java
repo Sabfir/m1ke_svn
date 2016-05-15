@@ -44,21 +44,6 @@ public class Repository {
 		headFileContent.put(HEAD_CONTENT_KEY, HEAD_CONTENT_VALUE);
 		FileHelper.addPropertiesToFile(pathHeadFile, headFileContent, false);
 		System.out.println(INITIALIZATION_INFO);
-
-//		Class<? extends Repository> clazz = this.getClass();
-//		Field[] fields = clazz.getDeclaredFields(); 
-//		
-//		for (Field field : fields) { 
-//		    String fieldName = field.getvalueName();
-//		    if (fieldName.toUpperCase().contains("RELETIVE_PATH_")) {
-//		    	// TODO create file or foString pathlder. Folder ends with \\
-//		    	try {
-//					FileHelper.createFileByUrl((String) field.get(this));
-//				} catch (Exception e) {
-//					throw new MikeException("", e);
-//				}
-//		    }
-//		} 
 	}
 	
 	public String getCurentBranchName() throws MikeException {
@@ -132,7 +117,7 @@ public class Repository {
 		for (String fileUrl : fileList) {
 			try {
 				String fileHash = getFileHash(fileUrl);
-				if (!FileHelper.filesAreEqual(new File(fileUrl), new File(getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "\\" + fileHash))) {
+				if (!FileHelper.compareFiles(new File(fileUrl), new File(getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "\\" + fileHash))) {
 					fileList.add(fileUrl);
 				}
 			} catch (MikeException e) {
