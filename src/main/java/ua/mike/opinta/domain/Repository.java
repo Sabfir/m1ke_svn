@@ -75,13 +75,13 @@ public class Repository {
 	}
 
 	public boolean isBranchExist(String branch){
-		return FileHelper.isExist(getPath() + RELETIVE_PATH_REFS + branch);
+		return FileHelper.isExist(getPath() + RELETIVE_PATH_REFS + "/" + branch);
 	}
 
 	public boolean createBranch(String branch) {
 		boolean status;
 		try {
-			FileHelper.createDirectory(getPath() + RELETIVE_PATH_REFS + branch);
+			FileHelper.createDirectory(getPath() + RELETIVE_PATH_REFS + "/" + branch);
 			status = true;
 		} catch (IOException e) {
 			status = false;
@@ -91,7 +91,7 @@ public class Repository {
 	public boolean removeBranch(String branch) {
 		boolean status;
 		try {
-			FileHelper.removeDirectory(getPath() + RELETIVE_PATH_REFS + branch);
+			FileHelper.removeDirectory(getPath() + RELETIVE_PATH_REFS + "/" + branch);
 			status = true;
 		} catch (IOException e) {
 			status = false;
@@ -123,7 +123,7 @@ public class Repository {
 			try {
 				String fileHash = getFileHash(fileUrl);
 				
-				String url = getPath() + RELETIVE_PATH_REFS + getCurentBranchName() + "/" + fileHash;
+				String url = getPath() + RELETIVE_PATH_REFS + "/" + getCurentBranchName() + "/" + fileHash;
 				System.out.println("path!: " + url);
 				if (!FileHelper.compareFiles(new File(fileUrl), new File(url))) {
 					fileList.add(fileUrl);
